@@ -41,9 +41,34 @@ In a sense, our language allowing us to do these steps as separate statements ha
 A monad is a design pattern (that comes in a few different flavors) that allows you to model computation as a sequence of steps. **A Monad allows you define what happens in between a series of function calls**. It's as if our language allows us to overload ; and provide whatever glue code is required between two statements.
 
 #####Q: Why are there different types of monads?
-Because you sometimes want different behaviour between your steps. If all you care about is the order of your steps and that each step is passed a particular value, then you can use the state monad.
+Because you sometimes want different behaviour between your steps. If all you care about is the order of your steps and that each step is passed a particular value, then you can use the state monad. Here is what using our state monad looks like:
+```c++
+auto hello = [] ( auto s ) { fprintf( s, "Hello " ); return s; };
+auto world = [] ( auto s ) { fprintf( s, "World!" ); return s; };
+auto newline = [] ( auto s ) { fprintf( s, "\n" ); return s; };
+
+terminal_state(stdout)
+  (fmap_state(hello))
+  (fmap_state(world))
+  (fmap_state(newline));
+```
+Notice how in the above example our hello, world and newline lambdas all require an argument and yet when we invoke these methods with our monadic chain we only provide the argument one time (to terminal_state). Also note: the above monadic chain is only a single statement.
 
 Another example is the maybe monad. The maybe monad allows you to short circuit the rest of the sequence if a step fails. It is called maybe because when complete it may or may not hold the final result.
+```c++
+auto plus_2 = [] ( auto arg ) { return arg + 2; };
+auto minus_2 = [] ( auto arg ) { return arg - 2; };
+
+auto result = terminal_maybe(just(38))
+  (fmap_maybe( plus_2 ))
+  (fmap_maybe( plus_2 ))
+  (fmap_maybe( plus_2 ))
+  (fmap_maybe( minus_2 ))
+  (unwrap);
+  
+if( result.valid )
+  printf("%d\n",result.argument);
+```
 
 This code requires a compiler that supports C++14. I tested it with clang 3.4.2.
 
