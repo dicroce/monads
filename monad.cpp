@@ -36,8 +36,10 @@ int main( int argc, char* argv[] )
 
     {
         auto plus_2 = [] ( auto arg ) { return arg + 2; };
-        auto minus_2 = [] ( auto arg ) { printf("IN MINUS 2\n"); return arg - 2; };
+        auto minus_2 = [] ( auto arg ) { return arg - 2; };
         auto failer = [] ( auto arg ) -> int { throw -1; };
+
+        // A call to failer inserted in the sequence below will fail and abort all calls after it.
 
         auto result = terminal_maybe(just(40))
             (fmap_maybe( plus_2 ))
