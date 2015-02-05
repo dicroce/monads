@@ -46,7 +46,6 @@ int main( int argc, char* argv[] )
             (fmap_maybe( plus_2 ))
             (fmap_maybe( plus_2 ))
             (fmap_maybe( plus_2 ))
-            (fmap_maybe( failer ))
             (fmap_maybe( minus_2 ))
             (unwrap);
 

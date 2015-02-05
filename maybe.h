@@ -35,7 +35,7 @@ auto fmap_maybe = [] ( auto f ) {
             }
         }
 
-        return (t.valid) ? terminal_maybe( just( t.argument ) ) : terminal_maybe( nothing<decltype(t.argument)>() );
+        return (t.valid) ? terminal_maybe( t ) : terminal_maybe( nothing<decltype(t.argument)>() );
     };
 };
 
